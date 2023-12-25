@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  geth: # this is Optimism's geth client
-    build: .
-    ports:
-      - 8545:8545       # RPC
-      - 8546:8546       # websocket
-      - 30303:30303     # P2P TCP (currently unused)
-      - 30303:30303/udp # P2P UDP (currently unused)
-      - 7301:6060       # metrics
-    command: [ "bash", "./geth-entrypoint" ]
-    env_file:
-      - .env.default
-      - networks/${CONDUIT_NETWORK:?set network}/.env
-      - .env
-    volumes:
-      #- ./geth-data/:/data # enable to have persistency between restarts
-      - ./networks/${CONDUIT_NETWORK:?set network}/genesis.json:/genesis.json
   node:
     build: .
     depends_on:
@@ -30,8 +14,8 @@ services:
     command: [ "bash", "./op-node-entrypoint" ]
     env_file:
       - .env.default
-      - networks/${CONDUIT_NETWORK:?set network}/.env
+      - networks/zora-mainnet-0/.env
       - .env
     volumes:
-      - ./networks/${CONDUIT_NETWORK:?set network}/rollup.json:/rollup.json
-      - ./networks/${CONDUIT_NETWORK:?set network}/genesis.json:/genesis.json
+      - ./networks/zora-mainnet-0/rollup.json:/rollup.json
+      - ./networks/zora-mainnet-0/genesis.json:/genesis.json
